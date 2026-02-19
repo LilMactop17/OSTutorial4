@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <stdbool.h>
 #include "questions.h"
 #include "players.h"
@@ -18,68 +19,100 @@
 #define NUM_PLAYERS 4
 
 // Put global environment variables here
-
+int questions_left = 12;
 // Processes the answer from the user containing what is or who is and tokenizes it to retrieve the answer.
-void tokenize(char *input, char **tokens);
+void tokenize(char *input, char **tokens) 
+{
+    // 1. Get "what" or "who"
+    tokens[0] = strtok(input, " ");
+    
+    // 2. Get "is" or "are"
+    tokens[1] = strtok(NULL, " ");
+    
+    // 3. Get the rest of the string (the actual answer)
+    char *remaining = strtok(NULL, "");
+    
+    // Clean up the leading space that strtok leaves behind
+    if (remaining != NULL && remaining[0] == ' ') {
+        remaining++;
+    }
+    tokens[2] = remaining;
+}
 
 // Displays the game results for each player, their name and final score, ranked from first to last place
-void show_results(player *players, int num_players);
+void show_results(player *players, int num_players) {
+    for (int i = 0; i<num_players; i++) {
+        printf("%s scored %d points.", players[i].name, players[i].score);
+    }
+}
 
 
 int main(int argc, char *argv[])
 {
-    // An array of 4 players, may need to be a pointer if you want it set dynamically
     player players[NUM_PLAYERS];
-    
-    // Input buffer and and commands
     char buffer[BUFFER_LEN] = { 0 };
+    int questions_left = NUM_QUESTIONS;
 
-    // Display the game introduction and initialize the questions
     initialize_game();
 
-    // Prompt for players names
     for (int i = 0; i < NUM_PLAYERS; i++) {
-        printf("Player %d, choose a name!\n", i+1);
+        printf("Player %d, choose a name: ", i+1);
         scanf("%s", players[i].name);
-
         players[i].score = 0;
     }
-
-    // initialize each of the players in the array
+    
+    getchar(); 
 
     int player = 0;
-    // Perform an infinite loop getting command input from users until game ends
-    while (fgets(buffer, BUFFER_LEN, stdin) != NULL)
+
+    while (questions_left > 0)
     {
+        display_categories();
 
         char category_chosen[50];
         int value;
         bool valid_choice = false;
-        // Call functions from the questions and players source files
-        
-        while (!valid_choice) {
-            // Execute the game until all questions are answered
-            printf("%s, Choose a category", players[player].name);
-            scanf("%s", category_chosen);
-            printf("Choose a Value");
-            scanf("%d", &value);
+        question *selected_question = NULL;
 
-            if (!already_answered(category_chosen, value)) {
+        // 3. Selection Loop
+        while (!valid_choice) {
+            printf("\n%s's turn. Choose a category: ", players[player].name);
+            scanf("%s", category_chosen);
+            printf("Choose a Value: ");
+            scanf("%d", &value);
+            getchar(); 
+
+            selected_question = already_answered(category_chosen, value);
+
+            if (selected_question != NULL && !selected_question->answered) {
                 valid_choice = true;
             }
             else {
-                printf("Invalid choice. Choose another question");
-                display_categories();
+                printf("Invalid choice or already answered.\n");
             }
         }
 
-        display_question(category_chosen, value);
+        display_question(selected_question->category, selected_question->value);
 
+        printf("Your answer (Must start with 'what is' or 'who is'): ");
+        fgets(buffer, BUFFER_LEN, stdin);
+        buffer[strcspn(buffer, "\n")] = 0; 
 
-        
-        // Display the final results and exit
-        player = (player + 1) % 4;
-        valid_choice = false;
+        char *tokens[3] = {NULL};
+
+        tokenize(buffer, tokens);
+        if (valid_answer(tokens, selected_question->answer)) {
+            printf("CORRECT!\n");
+            update_score(selected_question->value, &players[player]);
+            selected_question->answered = true;
+            questions_left--;
+        } else {
+            printf("Wrong! The correct answer was: %s\n", selected_question->answer);
+        }
+        player = (player + 1) % NUM_PLAYERS; 
     }
+
+    show_results(players, NUM_PLAYERS);
+
     return EXIT_SUCCESS;
 }

@@ -45,7 +45,7 @@ void display_question(char *category, int value)
     for (int i = 0; i<NUM_QUESTIONS; i++) {
         if (strcmp(questions[i].category, category) == 0 && questions[i].value == value) {
             if (!questions[i].answered) {
-                printf("%s", questions[i].question);
+                printf("Question: %s\n", questions[i].question);
             }
             else {
                 printf("Question has already been answered");
@@ -56,23 +56,37 @@ void display_question(char *category, int value)
 
 
 // Returns true if the answer is correct for the question for that category and dollar value
-bool valid_answer(char *category, int value, char *answer)
+bool valid_answer(char **tokens, char *correct_answer) 
 {
-    // Look into string comparison functions
-    return false;
+    // Check if the user even provided enough words
+    if (tokens[0] == NULL || tokens[1] == NULL || tokens[2] == NULL) {
+        return false;
+    }
+
+    // Requirement 7: Check for "what/who" AND "is"
+    bool has_prefix = (strcasecmp(tokens[0], "what") == 0 || strcasecmp(tokens[0], "who") == 0) &&
+                      (strcasecmp(tokens[1], "is") == 0);
+
+    if (!has_prefix) {
+        printf("FORMAT ERROR: Answer must start with 'What is' or 'Who is'.\n");
+        return false;
+    }
+
+    // Compare the user's answer (tokens[2]) to the database answer
+    return (strcasecmp(tokens[2], correct_answer) == 0);
 }
 
 // Returns true if the question has already been answered
-bool already_answered(char *category, int value)
+question* already_answered(char *category, int value)
 {
     for (int i = 0; i < NUM_QUESTIONS; i++) {
-        if (strcmp(questions[i].category, categories[i]) && questions[i].value == value) {
+        if (strcmp(questions[i].category, category) == 0 && questions[i].value == value) {
             if (!questions[i].answered) {
-                return false;
+                return &questions[i];
             }
-            return true;
+            return NULL;
         }
     }
     // lookup the question and see if it's already been marked as answered
-    return true;
+    return NULL;
 }
