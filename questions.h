@@ -18,9 +18,39 @@
 
 // List of 3 categories as array of strings
 static char categories[NUM_CATEGORIES][MAX_LEN] = {
-    "programming", 
-    "algorithms", 
-    "databases"
+    "Programming", 
+    "Algorithms", 
+    "Databases"
+};
+
+static char questions_strings[NUM_QUESTIONS][MAX_LEN] = {
+    "Programming Q1", 
+    "Programming Q2", 
+    "Programming Q3", 
+    "Programming Q4", 
+    "Algorithms Q1", 
+    "Algorithms Q2", 
+    "Algorithms Q3", 
+    "Algorithms Q4", 
+    "Databases Q1", 
+    "Databases Q2", 
+    "Databases Q3", 
+    "Databases Q4", 
+};
+
+static char answers[NUM_QUESTIONS][MAX_LEN] = {
+    "Programming Q1", 
+    "Programming Q2", 
+    "Programming Q3", 
+    "Programming Q4", 
+    "Algorithms Q1", 
+    "Algorithms Q2", 
+    "Algorithms Q3", 
+    "Algorithms Q4", 
+    "Databases Q1", 
+    "Databases Q2", 
+    "Databases Q3", 
+    "Databases Q4", 
 };
 
 // Questions struct for each question
@@ -34,7 +64,7 @@ typedef struct {
 
 // An array of 12 questions (4 for each category), initialized in initialize_game
 // this may need to be a pointer if you want it set dynamically
-question questions[NUM_QUESTIONS];
+extern question questions[NUM_QUESTIONS];
 
 // Initializes the array of questions for the game
 extern void initialize_game(void);

@@ -38,17 +38,48 @@ int main(int argc, char *argv[])
     initialize_game();
 
     // Prompt for players names
-    
+    for (int i = 0; i < NUM_PLAYERS; i++) {
+        printf("Player %d, choose a name!\n", i+1);
+        scanf("%s", players[i].name);
+
+        players[i].score = 0;
+    }
+
     // initialize each of the players in the array
 
+    int player = 0;
     // Perform an infinite loop getting command input from users until game ends
     while (fgets(buffer, BUFFER_LEN, stdin) != NULL)
     {
+
+        char category_chosen[50];
+        int value;
+        bool valid_choice = false;
         // Call functions from the questions and players source files
+        
+        while (!valid_choice) {
+            // Execute the game until all questions are answered
+            printf("%s, Choose a category", players[player].name);
+            scanf("%s", category_chosen);
+            printf("Choose a Value");
+            scanf("%d", &value);
 
-        // Execute the game until all questions are answered
+            if (!already_answered(category_chosen, value)) {
+                valid_choice = true;
+            }
+            else {
+                printf("Invalid choice. Choose another question");
+                display_categories();
+            }
+        }
 
+        display_question(category_chosen, value);
+
+
+        
         // Display the final results and exit
+        player = (player + 1) % 4;
+        valid_choice = false;
     }
     return EXIT_SUCCESS;
 }
