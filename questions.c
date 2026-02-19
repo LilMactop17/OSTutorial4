@@ -29,7 +29,6 @@ void initialize_game(void)
 // Displays each of the remaining categories and question dollar values that have not been answered
 void display_categories(void)
 {
-    // print categories and dollar values for each unanswered question in questions array
     for (int i = 0; i<NUM_CATEGORIES; i++) {
         printf("%s\n", categories[i]);
         for (int j = 0; j<NUM_QUESTIONS; j++) {
@@ -59,7 +58,6 @@ void display_question(char *category, int value)
 // Returns true if the answer is correct for the question for that category and dollar value
 bool valid_answer(char **tokens, char *correct_answer) 
 {
-    // Check if the user even provided enough words
     if (tokens[0] == NULL || tokens[1] == NULL || tokens[2] == NULL) {
         return false;
     }
@@ -73,7 +71,6 @@ bool valid_answer(char **tokens, char *correct_answer)
         return false;
     }
 
-    // Compare the user's answer (tokens[2]) to the database answer
     return (strcasecmp(tokens[2], correct_answer) == 0);
 }
 
@@ -88,6 +85,5 @@ question* already_answered(char *category, int value)
             return NULL;
         }
     }
-    // lookup the question and see if it's already been marked as answered
     return NULL;
 }
