@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include "questions.h"
 
 
@@ -43,7 +44,7 @@ void display_categories(void)
 void display_question(char *category, int value)
 {
     for (int i = 0; i<NUM_QUESTIONS; i++) {
-        if (strcmp(questions[i].category, category) == 0 && questions[i].value == value) {
+        if (strcasecmp(questions[i].category, category) == 0 && questions[i].value == value) {
             if (!questions[i].answered) {
                 printf("Question: %s\n", questions[i].question);
             }
@@ -80,7 +81,7 @@ bool valid_answer(char **tokens, char *correct_answer)
 question* already_answered(char *category, int value)
 {
     for (int i = 0; i < NUM_QUESTIONS; i++) {
-        if (strcmp(questions[i].category, category) == 0 && questions[i].value == value) {
+        if (strcasecmp(questions[i].category, category) == 0 && questions[i].value == value) {
             if (!questions[i].answered) {
                 return &questions[i];
             }
