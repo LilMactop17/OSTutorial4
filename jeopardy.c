@@ -1,10 +1,3 @@
-/*
- * Tutorial 4 Jeopardy Project for SOFE 3950U: Operating Systems
- *
- * Copyright (C) 2026, <GROUP NUMBER>
- * All rights reserved.
- *
- */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,26 +13,26 @@
 
 // Put global environment variables here
 int questions_left = 12;
-// Processes the answer from the user containing what is or who is and tokenizes it to retrieve the answer.
+// toeknize user input
 void tokenize(char *input, char **tokens) 
 {
-    // 1. Get "what" or "who"
+    // who or what
     tokens[0] = strtok(input, " ");
     
-    // 2. Get "is" or "are"
+    // getting is
     tokens[1] = strtok(NULL, " ");
     
-    // 3. Get the rest of the string (the actual answer)
+    // getting answer
     char *remaining = strtok(NULL, "");
     
-    // Clean up the leading space that strtok leaves behind
+    // clean leading space
     if (remaining != NULL && remaining[0] == ' ') {
         remaining++;
     }
     tokens[2] = remaining;
 }
 
-// Displays the game results for each player, their name and final score, ranked from first to last place
+// shows all the score sof eah player
 void show_results(player *players, int num_players) {
     for (int i = 0; i<num_players; i++) {
         printf("%s scored %d points.", players[i].name, players[i].score);
@@ -74,7 +67,6 @@ int main(int argc, char *argv[])
         bool valid_choice = false;
         question *selected_question = NULL;
 
-        // 3. Selection Loop
         while (!valid_choice) {
             printf("\n%s's turn. Choose a category: ", players[player].name);
             scanf("%s", category_chosen);

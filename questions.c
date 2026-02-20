@@ -1,10 +1,3 @@
-/*
- * Tutorial 4 Jeopardy Project for SOFE 3950U: Operating Systems
- *
- * Copyright (C) 2026, <GROUP NUMBER>
- * All rights reserved.
- *
- */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,10 +6,9 @@
 
 
 question questions[NUM_QUESTIONS];
-// Initializes the array of questions for the game
 void initialize_game(void)
 {
-    // initialize each question struct and assign it to the questions array
+    // initialize all the questions
     for (int i = 0; i<NUM_QUESTIONS; i++) {
         strcpy(questions[i].category, categories[i/4]);
         strcpy(questions[i].question, questions_strings[i]);
@@ -26,10 +18,10 @@ void initialize_game(void)
     }
 }
 
-// Displays each of the remaining categories and question dollar values that have not been answered
+// Display remaining categories
 void display_categories(void)
 {
-    // print categories and dollar values for each unanswered question in questions array
+
     for (int i = 0; i<NUM_CATEGORIES; i++) {
         printf("%s\n", categories[i]);
         for (int j = 0; j<NUM_QUESTIONS; j++) {
@@ -40,7 +32,6 @@ void display_categories(void)
     }
 }
 
-// Displays the question for the category and dollar value
 void display_question(char *category, int value)
 {
     for (int i = 0; i<NUM_QUESTIONS; i++) {
@@ -56,15 +47,15 @@ void display_question(char *category, int value)
 }
 
 
-// Returns true if the answer is correct for the question for that category and dollar value
+// Returns true if the answer is correct 
 bool valid_answer(char **tokens, char *correct_answer) 
 {
-    // Check if the user even provided enough words
+    // Check if user provided enough words
     if (tokens[0] == NULL || tokens[1] == NULL || tokens[2] == NULL) {
         return false;
     }
 
-    // Requirement 7: Check for "what/who" AND "is"
+    // checking fro who is or what is
     bool has_prefix = (strcasecmp(tokens[0], "what") == 0 || strcasecmp(tokens[0], "who") == 0) &&
                       (strcasecmp(tokens[1], "is") == 0);
 
@@ -73,11 +64,11 @@ bool valid_answer(char **tokens, char *correct_answer)
         return false;
     }
 
-    // Compare the user's answer (tokens[2]) to the database answer
+    // Compare the user answet to db answer
     return (strcasecmp(tokens[2], correct_answer) == 0);
 }
 
-// Returns true if the question has already been answered
+// returns true if the question already answered
 question* already_answered(char *category, int value)
 {
     for (int i = 0; i < NUM_QUESTIONS; i++) {
@@ -88,6 +79,5 @@ question* already_answered(char *category, int value)
             return NULL;
         }
     }
-    // lookup the question and see if it's already been marked as answered
     return NULL;
 }
